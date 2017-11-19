@@ -7,8 +7,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-HtmlAgilityPack
-.NET Framework 3.5
+* [HtmlAgilityPack](https://github.com/zzzprojects/html-agility-pack)
+* .NET Framework 3.5
 
 ### Installing
 
