@@ -14,6 +14,7 @@
         </div>
         <div>
             <asp:Button ID="sanitizeButton" runat="server" Text="Sanitize" OnClick="sanitizeButton_Click" />
+            <asp:Button ID="measureButton" runat="server" OnClick="measureButton_Click" Text="Measure" />
         </div>
         <div style="border: 1px solid black; padding: 20px;">
             <asp:Literal ID="cleanHtmlDisplay" runat="server" />
