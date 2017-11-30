@@ -14,14 +14,14 @@ namespace MarkupSanity
         /// <param name="whitelistedTags">The list of allowed tags. If this list is empty, the input string shall be returned as-is.</param>
         /// <param name="whitelistedAttributes">The list of allowed tag attributes.</param>
         /// <returns></returns>
-        public static String Sanitize(this String dirtyInput, List<String> whitelistedTags, List<String> whitelistedAttributes)
+        public static String SanitizeHtml(this String dirtyInput, List<String> whitelistedTags, List<String> whitelistedAttributes)
         {
             if (whitelistedTags == null || whitelistedTags.Count == 0)
                 return dirtyInput;
 
-            foreach (var tag in InternalRequiredTags)
+            foreach (var tag in Configure.InternalRequiredTags)
             { //-- Some "tags" are always required by HtmlAgilityPack, so make sure they are included.
-                if (!WhitelistedTags.Exists(p => p.ToLower() == tag.ToLower()))
+                if (!Configure.WhitelistedTags.Exists(p => p.ToLower() == tag.ToLower()))
                     whitelistedTags.Add(tag);
             }
 
@@ -58,13 +58,18 @@ namespace MarkupSanity
         /// </summary>
         /// <param name="dirtyInput">The raw html input.</param>
         /// <returns></returns>
-        public static String Sanitize(this String dirtyInput)
+        public static String SanitizeHtml(this String dirtyInput)
         {
-            return dirtyInput.Sanitize(WhitelistedTags, WhitelistedAttributes);
-        }
+            var workingWhitelistedTags = Configure.WhitelistedTags;
+            var workingWhitelistedAttributes = Configure.WhitelistedAttributes;
 
-        private static List<String> InternalRequiredTags = new List<String>() { "#document", "#text" };
-        private static List<String> WhitelistedTags = new List<String>() { "b", "strong", "i", "em", "u", "table", "th", "tr", "td", "ul", "ol", "li" };
-        private static List<String> WhitelistedAttributes = new List<String>() { "id", "name", "src", "href", "style" };
+            if (Configure.CustomWhitelistedTags != null && Configure.CustomWhitelistedTags.Count > 0)
+                workingWhitelistedTags = Configure.CustomWhitelistedTags;
+
+            if (Configure.CustomWhitelistedAttributes != null && Configure.CustomWhitelistedAttributes.Count > 0)
+                workingWhitelistedAttributes = Configure.CustomWhitelistedAttributes;
+
+            return dirtyInput.SanitizeHtml(workingWhitelistedTags, workingWhitelistedAttributes);
+        }
     }
 }

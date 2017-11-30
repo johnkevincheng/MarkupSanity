@@ -13,7 +13,7 @@ namespace MarkupSanityTester
 
         protected void sanitizeButton_Click(object sender, EventArgs e)
         {
-            cleanHtmlDisplay.Text = HttpUtility.HtmlEncode(rawHtmlInput.Text.Sanitize());
+            cleanHtmlDisplay.Text = HttpUtility.HtmlEncode(rawHtmlInput.Text.SanitizeHtml());
         }
     }
 }
