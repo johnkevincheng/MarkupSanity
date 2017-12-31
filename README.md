@@ -1,5 +1,7 @@
 # MarkupSanity
-Use HtmlAgilityPack parser to sanitize html text against unrecognized tags and attributes.
+Use Html Agility Pack parser to sanitize html text against unrecognized tags and attributes.
+
+As with any input processing, Markup Sanity adds performance degradations to the process, and in this case, quite significant due to the dependence on parsing from Html Agility Pack.
 
 ## Getting Started
 
@@ -7,7 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* [HtmlAgilityPack](https://github.com/zzzprojects/html-agility-pack)
+* [Html Agility Pack](https://github.com/zzzprojects/html-agility-pack)
 * .NET Framework 3.5
 
 ### Installing
