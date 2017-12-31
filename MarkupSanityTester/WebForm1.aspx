@@ -17,7 +17,9 @@
             <asp:Button ID="measureButton" runat="server" OnClick="measureButton_Click" Text="Measure" />
         </div>
         <div style="border: 1px solid black; padding: 20px;">
-            <asp:Literal ID="cleanHtmlDisplay" runat="server" />
+            <pre>
+<asp:Literal ID="cleanHtmlDisplay" runat="server" />
+            </pre>
         </div>
     </form>
 </body>

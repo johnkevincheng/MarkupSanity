@@ -8,8 +8,8 @@ namespace MarkupSanityTester
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            MarkupSanity.Configure.CustomWhitelistedTags = new List<String>() { "i", "em", "strong" };
-            MarkupSanity.Configure.CustomWhitelistedAttributes = new List<String>() { "id" };
+            //MarkupSanity.Configure.CustomWhitelistedTags = new List<String>() { "i", "em", "strong" };
+            //MarkupSanity.Configure.CustomWhitelistedAttributes = new List<String>() { "id" };
         }
 
         protected void Session_Start(object sender, EventArgs e)
