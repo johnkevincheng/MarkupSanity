@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MarkupSanity
+namespace RockFluid
 {
-    public static class MarkupSanity
+    public static partial class MarkupSanity
     {
         /// <summary>
         /// Protect against cross-site scripting vulnerabilities by sanitizing the html input against unrecognized tags and attributes.

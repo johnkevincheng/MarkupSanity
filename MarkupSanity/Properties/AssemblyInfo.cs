@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MarkupSanity")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Use HtmlAgilityPack parser to sanitize html text against unrecognized tags and attributes.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("John Kevin Cheng")]
 [assembly: AssemblyProduct("MarkupSanity")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]

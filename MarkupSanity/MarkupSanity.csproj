@@ -7,8 +7,8 @@
     <ProjectGuid>{2DCD7F42-89C5-4C7D-BEBB-D874CD7E3F97}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MarkupSanity</RootNamespace>
-    <AssemblyName>MarkupSanity</AssemblyName>
+    <RootNamespace>RockFluid</RootNamespace>
+    <AssemblyName>RockFluid.MarkupSanity</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,11 +33,10 @@
     <Reference Include="HtmlAgilityPack, Version=1.6.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.6.5\lib\Net20\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configure.cs" />
+    <Compile Include="MarkupSanity.Configure.cs" />
     <Compile Include="MarkupSanity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
