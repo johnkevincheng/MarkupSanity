@@ -263,3 +263,5 @@ __pycache__/
 /nuget.exe
 /MarkupSanityTester/.refsignored
 /MarkupSanity/.refsignored
+/MarkupSanity/nuget.exe
+/MarkupSanity/MarkupSanity.nuspec
