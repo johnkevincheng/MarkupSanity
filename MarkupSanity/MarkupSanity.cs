@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
+
 
 namespace RockFluid
 {
@@ -53,8 +55,13 @@ namespace RockFluid
                 if (scriptAttributes != null && scriptAttributes.Count() > 0)
                 {
                     foreach (var attr in scriptAttributes.Reverse())
-                        if (attr.Value.Replace(" ", "").ToLower().StartsWith("javascript:"))
+                    {
+                        if (attr.Value.ProcessString().StartsWith("javascript:") || attr.Value.ProcessString(HttpUtility.UrlDecode).StartsWith("javascript") || attr.Value.ProcessString(HttpUtility.HtmlDecode).StartsWith("javascript"))
                             attr.Remove();
+
+                        if (attr.Value.ProcessString().StartsWith("vbscript:") || attr.Value.ProcessString(HttpUtility.UrlDecode).StartsWith("vbscript") || attr.Value.ProcessString(HttpUtility.HtmlDecode).StartsWith("vbscript"))
+                            attr.Remove();
+                    }
                 }
             }
 

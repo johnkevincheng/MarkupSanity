@@ -33,17 +33,17 @@ namespace RockFluid
             /// <summary>
             /// A list of default whitelisted tags to validate against. This may be overriden by assigning custom attributes to the CustomWhitelistedTags property.
             /// </summary>
-            internal static List<String> WhitelistedTags = new List<String>() { "b", "strong", "i", "em", "u", "table", "th", "tr", "td", "ul", "ol", "li", "a" };
+            internal static List<String> WhitelistedTags = new List<String>() { "html", "head", "style", "body", "b", "strong", "i", "em", "u", "table", "th", "tr", "td", "ul", "ol", "li", "a", "p", "img", "iframe", "frameset", "frame", "title" };
 
             /// <summary>
             /// A list of default whitelisted attributes to validate against. This may be overriden by assigning custom attributes to the CustomWhitelistedAttributes property.
             /// </summary>
-            internal static List<String> WhitelistedAttributes = new List<String>() { "id", "name", "src", "href", "style" };
+            internal static List<String> WhitelistedAttributes = new List<String>() { "id", "name", "src", "href", "style", "title", "type", "background" };
 
             /// <summary>
             /// A list of default attributes that are known to support and execute javascript code.
             /// </summary>
-            internal static List<String> ScriptableAttributes = new List<String>() { "href" };
+            internal static List<String> ScriptableAttributes = new List<String>() { "href", "src", "background" };
         }
     }
 }

@@ -34,8 +34,10 @@
       <HintPath>..\packages\HtmlAgilityPack.1.6.5\lib\Net20\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MarkupSanity.ExtensionMethods.cs" />
     <Compile Include="MarkupSanity.Configure.cs" />
     <Compile Include="MarkupSanity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

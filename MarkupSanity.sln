@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkupSanity", "MarkupSanity\MarkupSanity.csproj", "{2DCD7F42-89C5-4C7D-BEBB-D874CD7E3F97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkupSanityTester", "MarkupSanityTester\MarkupSanityTester.csproj", "{441AA3F9-C0A6-4F96-B477-9BA1DD1040FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{F9085AD8-33D5-414E-8404-7A5DFDEB818F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{441AA3F9-C0A6-4F96-B477-9BA1DD1040FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{441AA3F9-C0A6-4F96-B477-9BA1DD1040FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{441AA3F9-C0A6-4F96-B477-9BA1DD1040FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9085AD8-33D5-414E-8404-7A5DFDEB818F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9085AD8-33D5-414E-8404-7A5DFDEB818F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9085AD8-33D5-414E-8404-7A5DFDEB818F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9085AD8-33D5-414E-8404-7A5DFDEB818F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
