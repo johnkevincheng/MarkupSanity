@@ -277,7 +277,7 @@ namespace UnitTestProject1
         public void NonAlphaNonDigitXss03()
         {
             var expected = "<SCRIPT/SRC=\"http://xss.rocks/xss.js\"></SCRIPT>".SanitizeHtml();
-            var actual = "xxx";
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -287,8 +287,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void ExtraneousOpenBrackets()
         {
-            var expected = $"<<SCRIPT>alert(\"XSS\");//<</SCRIPT>".SanitizeHtml();
-            var actual = $"";
+            var expected = "<<SCRIPT>alert(\"XSS\");//<</SCRIPT>".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -298,8 +298,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void NoClosingScriptTags()
         {
-            var expected = $"<SCRIPT SRC=http://xss.rocks/xss.js?< B >".SanitizeHtml();
-            var actual = $"";
+            var expected = "<SCRIPT SRC=http://xss.rocks/xss.js?< B >".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -309,8 +309,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void ProtocolResolutionInScriptTags()
         {
-            var expected = $"<SCRIPT SRC=//xss.rocks/.j>".SanitizeHtml();
-            var actual = $"";
+            var expected = "<SCRIPT SRC=//xss.rocks/.j>".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -320,8 +320,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void HalfOpenHTMLJavascriptXSSVector()
         {
-            var expected = $"<IMG SRC=\"javascript:alert('XSS')\"".SanitizeHtml();
-            var actual = $"<img>";
+            var expected = "<IMG SRC=\"javascript:alert('XSS')\"".SanitizeHtml();
+            var actual = "<img>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -331,8 +331,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void DoubleOpenAngleBrackets()
         {
-            var expected = $"<iframe src=http://xss.rocks/scriptlet.html <".SanitizeHtml();
-            var actual = $"<iframe src=\"http://xss.rocks/scriptlet.html\">";
+            var expected = "<iframe src=http://xss.rocks/scriptlet.html <".SanitizeHtml();
+            var actual = "<iframe src=\"http://xss.rocks/scriptlet.html\">";
             Assert.AreEqual(expected, actual);
         }
 
@@ -342,8 +342,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void EscapingJavascriptEscapes01()
         {
-            var expected = $"\\\"; alert('XSS');//".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "\\\"; alert('XSS');//".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -353,8 +353,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void EscapingJavascriptEscapes02()
         {
-            var expected = $"</script><script>alert('XSS');</script>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "</script><script>alert('XSS');</script>".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -364,8 +364,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void EndTitleTag()
         {
-            var expected = $"</TITLE><SCRIPT>alert(\"XSS\");</SCRIPT>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "</TITLE><SCRIPT>alert(\"XSS\");</SCRIPT>".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -373,8 +373,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void InputImage()
         {
-            var expected = $"<INPUT TYPE=\"IMAGE\" SRC=\"javascript:alert('XSS');\">".SanitizeHtml();
-            var actual = $"<input type=\"image\">";
+            var expected = "<INPUT TYPE=\"IMAGE\" SRC=\"javascript:alert('XSS');\">".SanitizeHtml();
+            var actual = "";    //-- Input elements are not in the default whitelist.
             Assert.AreEqual(expected, actual);
         }
 
@@ -382,8 +382,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void BODYImage()
         {
-            var expected = $"<BODY BACKGROUND=\"javascript:alert('XSS')\">".SanitizeHtml();
-            var actual = $"<body></body>";
+            var expected = "<BODY BACKGROUND=\"javascript:alert('XSS')\">".SanitizeHtml();
+            var actual = "<body></body>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -391,8 +391,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void IMGDynsrc()
         {
-            var expected = $"<IMG DYNSRC=\"javascript:alert('XSS')\">".SanitizeHtml();
-            var actual = $"<img>";
+            var expected = "<IMG DYNSRC=\"javascript:alert('XSS')\">".SanitizeHtml();
+            var actual = "<img>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -400,8 +400,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void IMGLowsrc()
         {
-            var expected = $"<IMG LOWSRC=\"javascript:alert('XSS')\">".SanitizeHtml();
-            var actual = $"<img>";
+            var expected = "<IMG LOWSRC=\"javascript:alert('XSS')\">".SanitizeHtml();
+            var actual = "<img>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -412,7 +412,7 @@ namespace UnitTestProject1
         public void ListStyleImage()
         {
             var expected = "<STYLE>li {list - style - image: url(\"javascript:alert('XSS')\");}</STYLE><UL><LI>XSS</br>".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -420,16 +420,16 @@ namespace UnitTestProject1
         [TestMethod]
         public void VbscriptInAnImage()
         {
-            var expected = $"<IMG SRC='vbscript:msgbox(\"XSS\")'>".SanitizeHtml();
-            var actual = $"<img>";
+            var expected = "<IMG SRC='vbscript:msgbox(\"XSS\")'>".SanitizeHtml();
+            var actual = "<img>";
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void LivescriptOlderVersionsOfNetscapeOnly()
         {
-            var expected = $"<IMG SRC=\"livescript:[code]\">".SanitizeHtml();
-            var actual = $"<img>";
+            var expected = "<IMG SRC=\"livescript:[code]\">".SanitizeHtml();
+            var actual = "<img>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -437,8 +437,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void SVGObjectTag()
         {
-            var expected = $"<svg/onload=alert('XSS')>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<svg/onload=alert('XSS')>".SanitizeHtml();
+            var actual = "";   //-- SVG tag is non-standard and thus not in default whitelist.
             Assert.AreEqual(expected, actual);
         }
 
@@ -446,8 +446,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void Ecmascript6()
         {
-            var expected = $"Set.constructor`alert\x28document.domain\x29```".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "Set.constructor`alert\x28document.domain\x29```".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -457,16 +457,16 @@ namespace UnitTestProject1
         [TestMethod]
         public void BODYTag()
         {
-            var expected = $"<BODY ONLOAD=alert('XSS')>".SanitizeHtml();
-            var actual = $"<body></body>";
+            var expected = "<BODY ONLOAD=alert('XSS')>".SanitizeHtml();
+            var actual = "<body></body>";
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void BGSOUND()
         {
-            var expected = $"<BGSOUND SRC=\"javascript:alert('XSS');\">".SanitizeHtml();
-            var actual = $"<bgsound>";
+            var expected = "<BGSOUND SRC=\"javascript:alert('XSS');\">".SanitizeHtml();
+            var actual = "";   //-- Not in default whitelist as this tag is now Obsolete.
             Assert.AreEqual(expected, actual);
         }
 
@@ -474,15 +474,15 @@ namespace UnitTestProject1
         public void JavascriptIncludes()
         {
             var expected = "<BR SIZE=\"&{alert('XSS')}\">".SanitizeHtml();
-            var actual = $"<br>";
+            var actual = "<br>";
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void STYLESheet()
         {
-            var expected = $"<LINK REL=\"stylesheet\" HREF=\"javascript:alert('XSS');\">".SanitizeHtml();
-            var actual = $"<link rel=\"stylesheet\">";
+            var expected = "<LINK REL=\"stylesheet\" HREF=\"javascript:alert('XSS');\">".SanitizeHtml();
+            var actual = "<link rel=\"stylesheet\">";
             Assert.AreEqual(expected, actual);
         }
         /// <summary>
@@ -491,8 +491,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void RemoteStyleSheet()
         {
-            var expected = $"<LINK REL=\"stylesheet\" HREF=\"http://xss.rocks/xss.css\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<LINK REL=\"stylesheet\" HREF=\"http://xss.rocks/xss.css\">".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -502,8 +502,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void RemoteStyleSheetPart2()
         {
-            var expected = $"<STYLE>@import'http://xss.rocks/xss.css';</STYLE>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<STYLE>@import'http://xss.rocks/xss.css';</STYLE>".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -513,8 +513,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void RemoteStyleSheetPart3()
         {
-            var expected = $"<META HTTP-EQUIV=\"Link\" Content=\"<http://xss.rocks/xss.css>; REL=stylesheet\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<META HTTP-EQUIV=\"Link\" Content=\"<http://xss.rocks/xss.css>; REL=stylesheet\">".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -525,7 +525,7 @@ namespace UnitTestProject1
         public void RemoteStyleSheetPart4()
         {
             var expected = "<STYLE>BODY{-moz - binding:url(\"http://xss.rocks/xssmoz.xml#xss\")}</STYLE>".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -535,24 +535,24 @@ namespace UnitTestProject1
         [TestMethod]
         public void STYLETagsWithBrokenUpJavascriptForXSS()
         {
-            var expected = $"<STYLE>@im\\port'\\ja\vasc\\ript:alert(\"XSS\")';</STYLE>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<STYLE>@im\\port'\\ja\vasc\\ript:alert(\"XSS\")';</STYLE>".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void STYLEAttributeUsingACommentToBreakUpExpression()
         {
-            var expected = $"<IMG STYLE=\"xss:expr/*XSS*/ession(alert('XSS'))\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<IMG STYLE=\"xss:expr/*XSS*/ession(alert('XSS'))\">".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void STYLETagOlderVersionsOfNetscapeOnly()
         {
-            var expected = $"<STYLE TYPE=\"text/javascript\">alert('XSS');</STYLE>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<STYLE TYPE=\"text/javascript\">alert('XSS');</STYLE>".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -568,7 +568,7 @@ namespace UnitTestProject1
         public void STYLETagUsingBackground()
         {
             var expected = "<STYLE type=\"text/css\">BODY{background:url(\"javascript:alert('XSS')\")}</STYLE>".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -576,10 +576,10 @@ namespace UnitTestProject1
         /// IE6.0 and Netscape 8.1+ in IE rendering engine mode don't really care if the HTML tag you build exists or not, as long as it starts with an open angle bracket and a letter:
         /// </summary>
         [TestMethod]
-        public void AnonymousHTMLWithSTYLEAttribute()
+        public void AnonymousHtmlWithStyleAttribute()
         {
-            var expected = $"<XSS STYLE=\"xss:expression(alert('XSS'))\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<XSS STYLE=\"xss:expression(alert('XSS'))\">".SanitizeHtml();
+            var actual = "";   //-- Non-standard tags are not in the whitelist and thus rejected.
             Assert.AreEqual(expected, actual);
         }
 
@@ -589,8 +589,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void LocalHtcFile()
         {
-            var expected = $"<XSS STYLE=\"behavior: url(xss.htc);\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<XSS STYLE=\"behavior: url(xss.htc);\">".SanitizeHtml();
+            var actual = "";   //-- Non-standard tags are not in the whitelist and thus rejected.
             Assert.AreEqual(expected, actual);
         }
 
@@ -600,8 +600,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void USASCIIEncoding()
         {
-            var expected = $"¼script¾alert(¢XSS¢)¼/script¾".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "¼script¾alert(¢XSS¢)¼/script¾".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -611,8 +611,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void META()
         {
-            var expected = $"<META HTTP-EQUIV=\"refresh\" CONTENT=\"0;url=javascript:alert('XSS');\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<META HTTP-EQUIV=\"refresh\" CONTENT=\"0;url=javascript:alert('XSS');\">".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -622,8 +622,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void METAUsingData()
         {
-            var expected = $"<META HTTP-EQUIV=\"refresh\" CONTENT=\"0;url=data:text/html base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<META HTTP-EQUIV=\"refresh\" CONTENT=\"0;url=data:text/html base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K\">".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -633,8 +633,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void METAWithAdditionalURLParameter()
         {
-            var expected = $"<META HTTP-EQUIV=\"refresh\" CONTENT=\"0; URL=http://;URL=javascript:alert('XSS');\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<META HTTP-EQUIV=\"refresh\" CONTENT=\"0; URL=http://;URL=javascript:alert('XSS');\">".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -644,8 +644,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void IFRAME()
         {
-            var expected = $"<IFRAME SRC=\"javascript:alert('XSS');\"></IFRAME>".SanitizeHtml();
-            var actual = $"<iframe></iframe>";
+            var expected = "<IFRAME SRC=\"javascript:alert('XSS');\"></IFRAME>".SanitizeHtml();
+            var actual = "<iframe></iframe>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -655,8 +655,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void IFRAMEEventBased()
         {
-            var expected = $"<IFRAME SRC=# onmouseover=\"alert(document.cookie)\"></IFRAME>".SanitizeHtml();
-            var actual = $"<iframe src=\"#\"></iframe>";
+            var expected = "<IFRAME SRC=# onmouseover=\"alert(document.cookie)\"></IFRAME>".SanitizeHtml();
+            var actual = "<iframe src=\"#\"></iframe>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -666,16 +666,16 @@ namespace UnitTestProject1
         [TestMethod]
         public void FRAME()
         {
-            var expected = $"<FRAMESET><FRAME SRC=\"javascript:alert('XSS');\"></FRAMESET>".SanitizeHtml();
-            var actual = $"<frameset><frame></frameset>";
+            var expected = "<FRAMESET><FRAME SRC=\"javascript:alert('XSS');\"></FRAMESET>".SanitizeHtml();
+            var actual = "<frameset><frame></frameset>";
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void TABLE()
         {
-            var expected = $"<TABLE BACKGROUND=\"javascript:alert('XSS')\">".SanitizeHtml();
-            var actual = $"<table></table>";
+            var expected = "<TABLE BACKGROUND=\"javascript:alert('XSS')\">".SanitizeHtml();
+            var actual = "<table></table>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -685,16 +685,16 @@ namespace UnitTestProject1
         [TestMethod]
         public void TD()
         {
-            var expected = $"<TABLE><TD BACKGROUND=\"javascript:alert('XSS')\">".SanitizeHtml();
-            var actual = $"<table><td></td></table>";
+            var expected = "<TABLE><TD BACKGROUND=\"javascript:alert('XSS')\">".SanitizeHtml();
+            var actual = "<table><td></td></table>";
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void DIVBackgroundImage()
+        public void DivBackgroundImage()
         {
-            var expected = $"<DIV STYLE=\"background-image: url(javascript:alert('XSS'))\">".SanitizeHtml();
-            var actual = $"<div>";
+            var expected = "<DIV STYLE=\"background-image: url(javascript:alert('XSS'))\">".SanitizeHtml();
+            var actual = "<div>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -704,8 +704,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void DIVBackgroundImageWithUnicodedXSSExploit()
         {
-            var expected = $"<DIV STYLE=\"background-image:\0075\0072\006C\0028'\006a\0061\0076\0061\0073\0063\0072\0069\0070\0074\003a\0061\006c\0065\0072\0074\0028.1027\0058.1053\0053\0027\0029'\0029\">".SanitizeHtml();
-            var actual = $"<div>";
+            var expected = "<DIV STYLE=\"background-image:\0075\0072\006C\0028'\006a\0061\0076\0061\0073\0063\0072\0069\0070\0074\003a\0061\006c\0065\0072\0074\0028.1027\0058.1053\0053\0027\0029'\0029\">".SanitizeHtml();
+            var actual = "<div>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -715,8 +715,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void DIVBackgroundImagePlusExtraCharacters()
         {
-            var expected = $"<DIV STYLE=\"background-image: url(&#1;javascript:alert('XSS'))\">".SanitizeHtml();
-            var actual = $"<div>";
+            var expected = "<DIV STYLE=\"background-image: url(&#1;javascript:alert('XSS'))\">".SanitizeHtml();
+            var actual = "<div>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -726,8 +726,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void DIVExpression()
         {
-            var expected = $"<DIV STYLE=\"width: expression(alert('XSS'));\">".SanitizeHtml();
-            var actual = $"<div>";
+            var expected = "<DIV STYLE=\"width: expression(alert('XSS'));\">".SanitizeHtml();
+            var actual = "<div></div>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -738,7 +738,7 @@ namespace UnitTestProject1
         public void DownlevelHiddenBlock()
         {
             var expected = "<!--[if gte IE 4]>{Environment.NewLine} <SCRIPT>alert('XSS');</SCRIPT>{Environment.NewLine} <![endif]-->".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -748,8 +748,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void BASETag()
         {
-            var expected = $"<BASE HREF=\"javascript:alert('XSS');//\">".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<BASE HREF=\"javascript:alert('XSS');//\">".SanitizeHtml();
+            var actual = "<base>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -759,8 +759,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void OBJECTTag()
         {
-            var expected = $"<OBJECT TYPE=\"text/x-scriptlet\" DATA=\"http://xss.rocks/scriptlet.html\"></OBJECT>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<OBJECT TYPE=\"text/x-scriptlet\" DATA=\"http://xss.rocks/scriptlet.html\"></OBJECT>".SanitizeHtml();
+            var actual = "";   //-- Object tag can contain dangerous objects and thus not in the whitelist.
             Assert.AreEqual(expected, actual);
         }
 
@@ -770,8 +770,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void UsingAnEMBEDTagYouCanEmbedAFlashMovieThatContainsXSS()
         {
-            var expected = $"EMBED SRC=\"http://ha.ckers.Using an EMBED tag you can embed a Flash movie that contains XSS. Click here for a demo. If you add the attributes allowScriptAccess=\"never\" and allownetworking=\"internal\" it can mitigate this risk (thank you to Jonathan Vanasco for the info).:{Environment.NewLine}org/xss.swf\" AllowScriptAccess=\"always\"></EMBED>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "EMBED SRC=\"http://ha.ckers.Using an EMBED tag you can embed a Flash movie that contains XSS. Click here for a demo. If you add the attributes allowScriptAccess=\"never\" and allownetworking=\"internal\" it can mitigate this risk (thank you to Jonathan Vanasco for the info).:{Environment.NewLine}org/xss.swf\" AllowScriptAccess=\"always\"></EMBED>".SanitizeHtml();
+            var actual = "";   //-- Embed tag can contain dangerous objects and thus not in the whitelist.
             Assert.AreEqual(expected, actual);
         }
 
@@ -781,8 +781,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void YouCanEMBEDSVGWhichCanContainYourXSSVector()
         {
-            var expected = $"<EMBED SRC=\"data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==\" type=\"image/svg+xml\" AllowScriptAccess=\"always\"></EMBED>".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<EMBED SRC=\"data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==\" type=\"image/svg+xml\" AllowScriptAccess=\"always\"></EMBED>".SanitizeHtml();
+            var actual = "";   //-- Embed tag can contain dangerous objects and thus not in the whitelist.
             Assert.AreEqual(expected, actual);
         }
 
@@ -790,7 +790,7 @@ namespace UnitTestProject1
         public void UsingActionscriptInsideFlashCanObfuscateYourXSSVector()
         {
             var expected = $"a=\"get\";{Environment.NewLine}b=\"URL(\\\"\";{Environment.NewLine}c=\"javascript:\";{Environment.NewLine}d=\"alert('XSS');\\\")\";{Environment.NewLine}eval(a+b+c+d);".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -801,7 +801,7 @@ namespace UnitTestProject1
         public void XMLDataIslandWithCDATAObfuscation()
         {
             var expected = $"<XML ID=\"xss\"><I><B><IMG SRC=\"javas<!-- -->cript:alert('XSS')\"></B></I></XML>{Environment.NewLine}<SPAN DATASRC=\"#xss\" DATAFLD=\"B\" DATAFORMATAS=\"HTML\"></SPAN>".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "<span></span>";   //-- XML is a non-standard HTML tag and thus not in the default whitelist.
             Assert.AreEqual(expected, actual);
         }
 
@@ -812,7 +812,7 @@ namespace UnitTestProject1
         public void LocallyHostedXMLWithEmbeddedJavascriptThatIsGeneratedUsingAnXMLDataIsland()
         {
             var expected = $"<XML SRC=\"xsstest.xml\" ID=I></XML>{Environment.NewLine}<SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML></SPAN>".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "<span></span>";   //-- XML is a non-standard HTML tag and thus not in the default whitelist.
             Assert.AreEqual(expected, actual);
         }
 
@@ -823,7 +823,7 @@ namespace UnitTestProject1
         public void HTMLTIMEInXML()
         {
             var expected = $"<HTML><BODY>{Environment.NewLine}<?xml:namespace prefix=\"t\" ns=\"urn:schemas-microsoft-com:time\">{Environment.NewLine}<?import namespace=\"t\" implementation=\"#default#time2\">{Environment.NewLine}<t:set attributeName=\"innerHTML\" to=\"XSS<SCRIPT DEFER>alert(\"XSS\")</SCRIPT>\">{Environment.NewLine}</BODY></HTML>".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -833,8 +833,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void AssumingYouCanOnlyFitInAFewCharactersAndItFiltersAgainstJs()
         {
-            var expected = $"<SCRIPT SRC=\"http://xss.rocks/xss.jpg\"></SCRIPT>".SanitizeHtml();
-            var actual = $"";
+            var expected = "<SCRIPT SRC=\"http://xss.rocks/xss.jpg\"></SCRIPT>".SanitizeHtml();
+            var actual = "";
             Assert.AreEqual(expected, actual);
         }
 
@@ -844,8 +844,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void SSIServerSideIncludes()
         {
-            var expected = $"<!--#exec cmd=\"/bin/echo '<SCR'\"--><!--#exec cmd=\"/bin/echo 'IPT SRC=http://xss.rocks/xss.js></SCRIPT>'\"-->".SanitizeHtml();
-            var actual = $"xxx";
+            var expected = "<!--#exec cmd=\"/bin/echo '<SCR'\"--><!--#exec cmd=\"/bin/echo 'IPT SRC=http://xss.rocks/xss.js></SCRIPT>'\"-->".SanitizeHtml();
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -856,7 +856,7 @@ namespace UnitTestProject1
         public void PHP()
         {
             var expected = $"<? echo('<SCR)';{Environment.NewLine}echo('IPT>alert(\"XSS\")</SCRIPT>'); ?>".SanitizeHtml();
-            var actual = $"xxx";
+            var actual = "xxx";
             Assert.AreEqual(expected, actual);
         }
 
@@ -866,8 +866,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void IMGEmbeddedCommands()
         {
-            var expected = $"<IMG SRC=\"http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode\">".SanitizeHtml();
-            var actual = $"<img>";
+            var expected = "<IMG SRC=\"http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode\">".SanitizeHtml();
+            var actual = "<img>";
             Assert.AreEqual(expected, actual);
         }
     }

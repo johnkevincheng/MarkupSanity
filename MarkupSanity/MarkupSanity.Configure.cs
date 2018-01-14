@@ -36,7 +36,7 @@ namespace RockFluid
             /// A list of default whitelisted tags to validate against. This may be overriden by assigning custom attributes to the CustomWhitelistedTags property.
             /// </summary>
             internal static List<String> WhitelistedTags = new List<String>() {
-                "html", "head", "style", "body", "base", "main",  // Document Tags
+                "html", "head", "style", "body", "base", "main", "link",  // Document Tags
                 "a", "img", "title", "q", "s", "strike",  // Basic Tags
                 "b", "strong", "i", "em", "u", "bdi", "bdo", "del", "ins", "small", "h1", "h2", "h3", "h4", "h5", "h6", "sub", "sup", "tt",  // Formatting Tag
                 "table", "thead", "tbody", "tfoot", "col", "colgroup", "th", "tr", "td", "caption", "ul", "ol", "li", "p", "div", "span", "iframe", "frameset", "frame", "noframe", "map", "area", "br", "dl", "dt", "dd", "fieldset", "hr", "nav", "pre", "wbr",  // Layout Tags

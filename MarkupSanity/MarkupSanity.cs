@@ -41,6 +41,12 @@ namespace RockFluid
             }
 
 
+            //-- Remove nodes containing dangerous Type values.
+            var scriptTypes = new String[] { "text/javascript", "text/vbscript" };
+            foreach (var node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(n => n.HasAttributes && n.Attributes.ToList().Exists(a => a.Name.ToLower() == "type" && scriptTypes.Contains(a.Value.ToLower()))).Reverse())
+                node.Remove();
+
+
             //-- Next find all nodes that has an attribute.
             foreach (HtmlNode node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(p => p.HasAttributes))
             {
@@ -48,7 +54,10 @@ namespace RockFluid
                 IEnumerable<HtmlAttribute> attributes = node.Attributes.Where(p => !whitelistedAttributes.Exists(q => q.ToLower() == p.Name.ToLower()));
                 if (attributes != null && attributes.Count() > 0)
                     foreach (var attr in attributes.Reverse())
+                    {
                         attr.Remove();
+                        continue;
+                    }
 
                 //-- Additionally, remove any attributes that contain scripts which the browser can execute.
                 IEnumerable<HtmlAttribute> scriptAttributes = node.Attributes.Where(p => scriptableAttributes.Exists(q => q.ToLower() == p.Name.ToLower()));
@@ -57,10 +66,16 @@ namespace RockFluid
                     foreach (var attr in scriptAttributes.Reverse())
                     {
                         if (attr.Value.ProcessString().StartsWith("javascript:") || attr.Value.ProcessString(HttpUtility.UrlDecode).StartsWith("javascript") || attr.Value.ProcessString(HttpUtility.HtmlDecode).StartsWith("javascript"))
+                        {
                             attr.Remove();
+                            continue;
+                        }
 
                         if (attr.Value.ProcessString().StartsWith("vbscript:") || attr.Value.ProcessString(HttpUtility.UrlDecode).StartsWith("vbscript") || attr.Value.ProcessString(HttpUtility.HtmlDecode).StartsWith("vbscript"))
+                        {
                             attr.Remove();
+                            continue;
+                        }
                     }
                 }
             }
