@@ -16,6 +16,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 Add the MarkupSanity project to your .NET solution, and have your relevant projects reference this class library to be able to access the classes and extension methods needed to process html texts.
 
+Alternatively, you may download the dll package directly from Nuget [here](https://www.nuget.org/packages/RockFluid.MarkupSanity/).
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/johnkevincheng/MarkupSanity/tags). 
