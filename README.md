@@ -7,11 +7,11 @@ As with any input processing, Markup Sanity adds performance degradations to the
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-At its simplest usage, MarkupSanity is an extension method for Strings and validates the value against a pre-defined set of default whitelisted tags and attrbutes. These tags and attributes came from W3C standards, but excluding elements where Javascript is used (e.g. "`onclick=`" event). Some attributes have secondary usage for Javascripts (e.g. `<a href="javascript:alert('gotcha!');">Click Me</a>`), so these are handled as well.
+At its simplest usage, MarkupSanity is an extension method for Strings and validates the value against a pre-defined set of default whitelisted tags and attrbutes.
 
 As an example,
 
-    String inputValue = "<a href="javascript:alert('Gotcha again!');" onclick="javascript:alert('Gotcha!');">Click Me</a>";
+    String inputValue = "<a href=\"javascript:alert('Gotcha again!');\" onclick=\"javascript:alert('Gotcha!');\">Click Me</a>";
     String cleanValue = inputValue.SanitizeHtml();
     Console.Writeline(cleanValue);
 
@@ -20,6 +20,8 @@ The output shall be:
     <a>Click Me</a>
 
 The `onclick` attribute is removed due to its use for scripting. But while `href` is a valid attribute, its usage to trigger a Javascript alert is considered dangerous and thus removed.
+
+You may refer to the [wiki](https://github.com/johnkevincheng/MarkupSanity/wiki) for more advanced usage information.
 
 ### Prerequisites
 
