@@ -11,6 +11,9 @@ namespace MarkupSanityTester
         {
             //MarkupSanity.Configure.CustomWhitelistedTags = new List<String>() { "i", "em", "strong" };
             //MarkupSanity.Configure.CustomWhitelistedAttributes = new List<String>() { "id" };
+
+            //MarkupSanity.Configure.ExtraTags = new List<String>() { "elementX" };
+            //MarkupSanity.Configure.ExtraAttributes = new List<String>() { "jobId" };
         }
 
         protected void Session_Start(object sender, EventArgs e)

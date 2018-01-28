@@ -27,6 +27,30 @@ namespace RockFluid
             public static List<String> CustomScriptableAttributes { get; set; } = new List<String>();
 
             /// <summary>
+            /// Gets or sets the custom list of special supplemental tags to extend the default WhitelistedTags list. These are not added to the CustomWhitelistedTags property.
+            /// </summary>
+            /// <remarks>
+            /// Add values here if the defaults are acceptable, but would like to add more to it.
+            /// </remarks>
+            public static List<String> SupplementalTags { get; set; } = new List<String>();
+
+            /// <summary>
+            /// Gets or sets the custom list of special supplemental attributes to extend the default WhitelistedAttributes list. These are not added to the CustomWhitelistedAttributes property.
+            /// </summary>
+            /// <remarks>
+            /// Add values here if the defaults are acceptable, but would like to add more to it.
+            /// </remarks>
+            public static List<String> SupplementalAttributes { get; set; } = new List<String>();
+
+            /// <summary>
+            /// Gets or sets the custom list of special supplemental scriptable attributes to extend the default ScriptableAttributes list. These are not added to the CustomScriptableAttributes property.
+            /// </summary>
+            /// <remarks>
+            /// Add values here if the defaults are acceptable, but would like to add more to it.
+            /// </remarks>
+            public static List<String> SupplementalScriptableAttributes { get; set; } = new List<String>();
+
+            /// <summary>
             /// A list of internal required tags for HtmlAgilityPack. These are tags used by HtmlAgilityPack for elements not wrapped in HTML tags.
             /// </summary>
             internal static List<String> InternalRequiredTags = new List<String>() { "#document", "#text" };

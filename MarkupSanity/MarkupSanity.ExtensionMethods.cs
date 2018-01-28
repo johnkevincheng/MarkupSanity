@@ -9,7 +9,7 @@ namespace RockFluid
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static String ProcessString(this String input)
+        private static String ProcessString(this String input)
         {
             return input.ProcessString(null);
         }
@@ -20,7 +20,7 @@ namespace RockFluid
         /// <param name="input"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        public static String ProcessString(this String input, Func<String, String> func)
+        private static String ProcessString(this String input, Func<String, String> func)
         {
             var val = input;
 
