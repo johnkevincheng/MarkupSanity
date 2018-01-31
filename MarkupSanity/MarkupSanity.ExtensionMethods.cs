@@ -28,7 +28,7 @@ namespace RockFluid
                 if (func != null)
                     val = func(input);
 
-            val = val.Replace(Environment.NewLine, "").Replace("\n", "").Replace("\r", "").ToLower();
+            val = val.Replace(Environment.NewLine, "").Replace("\n", "").Replace("\r", "").Replace("\t","").ToLower();
 
             while (val.Contains(" "))
                 val = val.Replace(" ", "");

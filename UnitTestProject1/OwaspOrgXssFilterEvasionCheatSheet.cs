@@ -63,17 +63,6 @@ namespace UnitTestProject1
             Assert.AreEqual(expected, actual);
         }
 
-        /// <summary>
-        /// Use this one to break up XSS :
-        /// </summary>
-        [TestMethod]
-        public void EmbeddedEncodedTab()
-        {
-            var actual = "<IMG SRC=\"jav &#x09;ascript:alert('XSS');\">".SanitizeHtml();
-            var expected = "<img>";
-            Assert.AreEqual(expected, actual);
-        }
-
         [TestMethod]
         public void NullBreaksUpJavaScriptDirective()
         {
@@ -378,17 +367,6 @@ namespace UnitTestProject1
         }
 
         /// <summary>
-        /// This is the same as above but instead referrs to a locally hosted (must be on the same server) XML file that contains your cross site scripting vector. You can see the result here:
-        /// </summary>
-        [TestMethod]
-        public void LocallyHostedXMLWithEmbeddedJavascriptThatIsGeneratedUsingAnXMLDataIsland()
-        {
-            var actual = $"<XML SRC=\"xsstest.xml\" ID=I></XML>{Environment.NewLine}<SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML></SPAN>".SanitizeHtml();
-            var expected = "<span></span>";   //-- XML is a non-standard HTML tag and thus not in the default whitelist.
-            Assert.AreEqual(expected, actual);
-        }
-
-        /// <summary>
         /// This is how Grey Magic hacked Hotmail and Yahoo!. This only works in Internet Explorer and Netscape 8.1 in IE rendering engine mode and remember that you need to be between HTML and BODY tags for this to work:
         /// </summary>
         [TestMethod]
@@ -556,6 +534,17 @@ namespace UnitTestProject1
             }
 
             /// <summary>
+            /// Use this one to break up XSS :
+            /// </summary>
+            [TestMethod]
+            public void EmbeddedEncodedTab()
+            {
+                var actual = "<IMG SRC=\"jav &#x09;ascript:alert('XSS');\">".SanitizeHtml();
+                var expected = "<img>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            /// <summary>
             /// Used to break up the cross site scripting attack:
             /// </summary>
             [TestMethod]
@@ -695,6 +684,17 @@ namespace UnitTestProject1
             {
                 var actual = "<XSS STYLE=\"behavior: url(xss.htc);\">".SanitizeHtml();
                 var expected = "";   //-- Non-standard tags are not in the whitelist and thus rejected.
+                Assert.AreEqual(expected, actual);
+            }
+
+            /// <summary>
+            /// This is the same as above but instead referrs to a locally hosted (must be on the same server) XML file that contains your cross site scripting vector. You can see the result here:
+            /// </summary>
+            [TestMethod]
+            public void LocallyHostedXMLWithEmbeddedJavascriptThatIsGeneratedUsingAnXMLDataIsland()
+            {
+                var actual = $"<XML SRC=\"xsstest.xml\" ID=I></XML>{Environment.NewLine}<SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML></SPAN>".SanitizeHtml();
+                var expected = $"{Environment.NewLine}<span></span>";   //-- XML is a non-standard HTML tag and thus not in the default whitelist.
                 Assert.AreEqual(expected, actual);
             }
 
