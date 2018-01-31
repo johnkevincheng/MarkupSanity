@@ -74,28 +74,6 @@ namespace UnitTestProject1
             Assert.AreEqual(expected, actual);
         }
 
-        /// <summary>
-        /// Some websites claim that any of the chars 09-13 (decimal) will work for this attack. That is incorrect. Only 09 (horizontal tab), 10 (newline) and 13 (carriage return) work. See the ascii chart for more details. The following four XSS examples illustrate this vector:
-        /// </summary>
-        [TestMethod]
-        public void EmbeddedNewlineToBreakUpXss()
-        {
-            var actual = "<IMG SRC=\"jav &#x0A;ascript:alert('XSS');\">".SanitizeHtml();
-            var expected = "<img>";
-            Assert.AreEqual(expected, actual);
-        }
-
-        /// <summary>
-        /// (Note: with the above I am making these strings longer than they have to be because the zeros could be omitted. Often I've seen filters that assume the hex and dec encoding has to be two or three characters. The real rule is 1-7 characters.):
-        /// </summary>
-        [TestMethod]
-        public void EmbeddedCarriageReturnToBreakUpXss()
-        {
-            var actual = "<IMG SRC=\"jav &#x0D;ascript:alert('XSS');\">".SanitizeHtml();
-            var expected = "<img>";
-            Assert.AreEqual(expected, actual);
-        }
-
         [TestMethod]
         public void NullBreaksUpJavaScriptDirective()
         {
@@ -551,6 +529,28 @@ namespace UnitTestProject1
             public void DefaultSrcTagToGetPastFiltersThatCheckSrcDomain()
             {
                 var actual = "<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>".SanitizeHtml();
+                var expected = "<img>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            /// <summary>
+            /// Some websites claim that any of the chars 09-13 (decimal) will work for this attack. That is incorrect. Only 09 (horizontal tab), 10 (newline) and 13 (carriage return) work. See the ascii chart for more details. The following four XSS examples illustrate this vector:
+            /// </summary>
+            [TestMethod]
+            public void EmbeddedNewlineToBreakUpXss()
+            {
+                var actual = "<IMG SRC=\"jav &#x0A;ascript:alert('XSS');\">".SanitizeHtml();
+                var expected = "<img>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            /// <summary>
+            /// (Note: with the above I am making these strings longer than they have to be because the zeros could be omitted. Often I've seen filters that assume the hex and dec encoding has to be two or three characters. The real rule is 1-7 characters.):
+            /// </summary>
+            [TestMethod]
+            public void EmbeddedCarriageReturnToBreakUpXss()
+            {
+                var actual = "<IMG SRC=\"jav &#x0D;ascript:alert('XSS');\">".SanitizeHtml();
                 var expected = "<img>";
                 Assert.AreEqual(expected, actual);
             }

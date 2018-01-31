@@ -20,14 +20,18 @@ namespace RockFluid
         /// <param name="input"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        private static String ProcessString(this String input, Func<String, String> func)
+        private static String ProcessString(this String input, params Func<String, String>[] functions)
         {
             var val = input;
 
-            if (func != null)
-                val = func(input);
+            foreach (var func in functions)
+                if (func != null)
+                    val = func(input);
 
-            val = val.Replace(" ", "").Replace(Environment.NewLine, " ").ToLower();
+            val = val.Replace(Environment.NewLine, "").Replace("\n", "").Replace("\r", "").ToLower();
+
+            while (val.Contains(" "))
+                val = val.Replace(" ", "");
 
             return val;
         }

@@ -65,13 +65,13 @@ namespace RockFluid
                 {
                     foreach (var attr in scriptAttributes.Reverse())
                     {
-                        if (attr.Value.ProcessString().StartsWith("javascript:") || attr.Value.ProcessString(HttpUtility.UrlDecode).StartsWith("javascript") || attr.Value.ProcessString(HttpUtility.HtmlDecode).StartsWith("javascript"))
+                        if (attr.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode).StartsWith("javascript:"))
                         {
                             attr.Remove();
                             continue;
                         }
 
-                        if (attr.Value.ProcessString().StartsWith("vbscript:") || attr.Value.ProcessString(HttpUtility.UrlDecode).StartsWith("vbscript") || attr.Value.ProcessString(HttpUtility.HtmlDecode).StartsWith("vbscript"))
+                        if (attr.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode).StartsWith("vbscript"))
                         {
                             attr.Remove();
                             continue;
