@@ -27,6 +27,11 @@ namespace RockFluid
             public static List<String> CustomScriptableAttributes { get; set; } = new List<String>();
 
             /// <summary>
+            /// Gets or sets the custom list of known attribute signatures that supports and executes javascript code. If these signatures are found in attribute values, the whole attribute shall be removed.
+            /// </summary>
+            public static List<String> CustomScriptableAttributeSignatures { get; set; } = new List<String>();
+
+            /// <summary>
             /// Gets or sets the custom list of special supplemental tags to extend the default WhitelistedTags list. These are not added to the CustomWhitelistedTags property.
             /// </summary>
             /// <remarks>
@@ -87,6 +92,11 @@ namespace RockFluid
             /// A list of default attributes that are known to support and execute javascript code.
             /// </summary>
             internal static List<String> ScriptableAttributes = new List<String>() { "href", "src", "background" };
+
+            /// <summary>
+            /// A list of default scripting signatures to watch out for on the scriptable attributes.
+            /// </summary>
+            internal static List<String> ScriptableAttributesScriptSignatures = new List<String>() { "javascript:", "vbscript:", "onmouseover=" };
         }
     }
 }

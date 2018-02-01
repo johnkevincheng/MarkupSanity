@@ -33,14 +33,6 @@ namespace UnitTestProject1
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void DefaultSrcTagByLeavingItEmpty()
-        {
-            var actual = "<IMG SRC= onmouseover=\"alert('xxs')\">".SanitizeHtml();
-            var expected = "<img>";
-            Assert.AreEqual(expected, actual);
-        }
-
         /// <summary>
         /// This is often effective in XSS that attempts to look for "&#XX;", since most people don't know about padding - up to 7 numeric characters total. This is also useful against people who decode against strings like $tmp_string =~ s/.*\&#(\d+);.*/$1/; which incorrectly assumes a semicolon is required to terminate a html encoded string (I've seen this in the wild):
         /// </summary>
@@ -488,6 +480,14 @@ namespace UnitTestProject1
             public void DecimalHtmlCharacterReferences()
             {
                 var actual = $"<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;{Environment.NewLine}&#39;&#88;&#83;&#83;&#39;&#41;>".SanitizeHtml();
+                var expected = "<img>";
+                Assert.AreEqual(expected, actual);
+            }
+
+            [TestMethod]
+            public void DefaultSrcTagByLeavingItEmpty()
+            {
+                var actual = "<IMG SRC= onmouseover=\"alert('xxs')\">".SanitizeHtml();
                 var expected = "<img>";
                 Assert.AreEqual(expected, actual);
             }

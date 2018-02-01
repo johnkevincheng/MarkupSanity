@@ -65,16 +65,14 @@ namespace RockFluid
                 {
                     foreach (var attr in scriptAttributes.Reverse())
                     {
-                        if (attr.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode).StartsWith("javascript:"))
+                        //-- Check each scriptable attribute for known signatures.
+                        foreach (var signature in Configure.ScriptableAttributesScriptSignatures)
                         {
-                            attr.Remove();
-                            continue;
-                        }
-
-                        if (attr.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode).StartsWith("vbscript"))
-                        {
-                            attr.Remove();
-                            continue;
+                            if (attr.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode).StartsWith(signature))
+                            {
+                                attr.Remove();
+                                continue;
+                            }
                         }
                     }
                 }
