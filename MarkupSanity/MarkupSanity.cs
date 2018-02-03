@@ -22,9 +22,9 @@ namespace RockFluid
             if (whitelistedTags == null || whitelistedTags.Count == 0)
                 return dirtyInput;
 
-            foreach (var tag in Configure.InternalRequiredTags)
+            foreach (var tag in Configure.InternalDefaultLists.InternalRequiredTags)
             { //-- Some "tags" are always required by HtmlAgilityPack, so make sure they are included.
-                if (!Configure.WhitelistedTags.Exists(p => p.ToLower() == tag.ToLower()))
+                if (!Configure.InternalDefaultLists.WhitelistedTags.Exists(p => p.ToLower() == tag.ToLower()))
                     whitelistedTags.Add(tag);
             }
 
@@ -66,7 +66,7 @@ namespace RockFluid
                     foreach (var attr in scriptAttributes.Reverse())
                     {
                         //-- Check each scriptable attribute for known signatures.
-                        foreach (var signature in Configure.ScriptableAttributesScriptSignatures)
+                        foreach (var signature in Configure.InternalDefaultLists.ScriptableAttributesScriptSignatures)
                         {
                             if (attr.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode).StartsWith(signature))
                             {
@@ -90,14 +90,7 @@ namespace RockFluid
         /// <returns></returns>
         public static String SanitizeHtml(this String dirtyInput, List<String> whitelistedTags, List<String> whitelistedAttributes)
         {
-            var workingScriptableAttributes = Configure.ScriptableAttributes;
-
-            if (Configure.CustomScriptableAttributes != null && Configure.CustomScriptableAttributes.Count > 0)
-                workingScriptableAttributes = Configure.CustomScriptableAttributes;
-            else if (Configure.SupplementalScriptableAttributes != null && Configure.SupplementalScriptableAttributes.Count > 0)
-                workingScriptableAttributes.AddRange(Configure.SupplementalScriptableAttributes);
-
-            return dirtyInput.SanitizeHtml(whitelistedTags, whitelistedAttributes, workingScriptableAttributes);
+            return dirtyInput.SanitizeHtml(whitelistedTags, whitelistedAttributes, WorkingScriptableAttributes);
         }
 
         /// <summary>
@@ -107,30 +100,12 @@ namespace RockFluid
         /// <returns></returns>
         public static String SanitizeHtml(this String dirtyInput)
         {
-            //-- Assign the default whitelists.
-            var workingWhitelistedTags = Configure.WhitelistedTags;
-            var workingWhitelistedAttributes = Configure.WhitelistedAttributes;
-            var workingScriptableAttributes = Configure.ScriptableAttributes;
-
-            //-- Override with customs if any are configured, else add extra whitelists if any are configured.
-            //-- The extras are not added if customs are configured, as the customs should hold all of the extras.
-            if (Configure.CustomWhitelistedTags != null && Configure.CustomWhitelistedTags.Count > 0)
-                workingWhitelistedTags = Configure.CustomWhitelistedTags;
-            else if (Configure.SupplementalTags != null && Configure.SupplementalTags.Count > 0)
-                workingWhitelistedTags.AddRange(Configure.SupplementalTags);
-
-            if (Configure.CustomWhitelistedAttributes != null && Configure.CustomWhitelistedAttributes.Count > 0)
-                workingWhitelistedAttributes = Configure.CustomWhitelistedAttributes;
-            else if (Configure.SupplementalAttributes != null && Configure.SupplementalAttributes.Count > 0)
-                workingWhitelistedAttributes.AddRange(Configure.SupplementalAttributes);
-
-            if (Configure.CustomScriptableAttributes != null && Configure.CustomScriptableAttributes.Count > 0)
-                workingScriptableAttributes = Configure.CustomScriptableAttributes;
-            else if (Configure.SupplementalScriptableAttributes != null && Configure.SupplementalScriptableAttributes.Count > 0)
-                workingScriptableAttributes.AddRange(Configure.SupplementalScriptableAttributes);
-
-
-            return dirtyInput.SanitizeHtml(workingWhitelistedTags, workingWhitelistedAttributes, workingScriptableAttributes);
+            return dirtyInput.SanitizeHtml(WorkingWhitelistedTags, WorkingWhitelistedAttributes, WorkingScriptableAttributes);
         }
+
+        internal static List<String> WorkingWhitelistedTags { get; set; } = Configure.InternalDefaultLists.WhitelistedTags;
+        internal static List<String> WorkingWhitelistedAttributes { get; set; } = Configure.InternalDefaultLists.WhitelistedAttributes;
+        internal static List<String> WorkingScriptableAttributes { get; set; } = Configure.InternalDefaultLists.ScriptableAttributes;
+        internal static List<String> WorkingScriptableAttributesSignatures { get; set; } = Configure.InternalDefaultLists.ScriptableAttributesScriptSignatures;
     }
 }

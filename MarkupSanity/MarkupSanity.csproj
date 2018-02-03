@@ -37,6 +37,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MarkupSanity.Configure.InternalDefault.cs" />
     <Compile Include="MarkupSanity.ExtensionMethods.cs" />
     <Compile Include="MarkupSanity.Configure.cs" />
     <Compile Include="MarkupSanity.cs" />
