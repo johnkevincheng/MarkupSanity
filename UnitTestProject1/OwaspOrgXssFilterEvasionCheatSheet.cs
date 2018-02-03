@@ -75,17 +75,6 @@ namespace UnitTestProject1
         }
 
         /// <summary>
-        /// Submitted by Franz Sedlmaier, this XSS vector could defeat certain detection engines that work by first using matching pairs of open and close angle brackets and then by doing a comparison of the tag inside, instead of a more efficient algorythm like Boyer-Moore that looks for entire string matches of the open angle bracket and associated tag (post de-obfuscation, of course). The double slash comments out the ending extraneous bracket to supress a JavaScript error:
-        /// </summary>
-        [TestMethod]
-        public void ExtraneousOpenBrackets()
-        {
-            var actual = "<<SCRIPT>alert(\"XSS\");//<</SCRIPT>".SanitizeHtml();
-            var expected = "";
-            Assert.AreEqual(expected, actual);
-        }
-
-        /// <summary>
         /// Unlike Firefox the IE rendering engine doesn't add extra data to your page, but it does allow the javascript: directive in images. This is useful as a vector because it doesn't require a close angle bracket. This assumes there is any HTML tag below where you are injecting this cross site scripting vector. Even though there is no close ">" tag the tags below it will close it. A note: this does mess up the HTML, depending on what HTML is beneath it. It gets around the following NIDS regex: /((\%3D)|(=))[^\n]*((\%3C)|<)[^\n]+((\%3E)|>)/ because it doesn't require the end ">". As a side note, this was also affective against a real world XSS filter I came across using an open ended <IFRAME tag instead of an <IMG tag:
         /// </summary>
         [TestMethod]
@@ -323,7 +312,7 @@ namespace UnitTestProject1
         [TestMethod]
         public void DownlevelHiddenBlock()
         {
-            var actual = "<!--[if gte IE 4]>{Environment.NewLine} <SCRIPT>alert('XSS');</SCRIPT>{Environment.NewLine} <![endif]-->".SanitizeHtml();
+            var actual = $"<!--[if gte IE 4]>{Environment.NewLine} <SCRIPT>alert('XSS');</SCRIPT>{Environment.NewLine} <![endif]-->".SanitizeHtml();
             var expected = "xxx";
             Assert.AreEqual(expected, actual);
         }
@@ -574,6 +563,17 @@ namespace UnitTestProject1
             {
                 var actual = "</script><script>alert('XSS');</script>".SanitizeHtml();
                 var expected = "";
+                Assert.AreEqual(expected, actual);
+            }
+
+            /// <summary>
+            /// Submitted by Franz Sedlmaier, this XSS vector could defeat certain detection engines that work by first using matching pairs of open and close angle brackets and then by doing a comparison of the tag inside, instead of a more efficient algorythm like Boyer-Moore that looks for entire string matches of the open angle bracket and associated tag (post de-obfuscation, of course). The double slash comments out the ending extraneous bracket to supress a JavaScript error:
+            /// </summary>
+            [TestMethod]
+            public void ExtraneousOpenBrackets()
+            {
+                var actual = "<<SCRIPT>alert(\"XSS\");//<</SCRIPT>".SanitizeHtml();
+                var expected = "<"; //-- HtmlAgilityPack recognizes this as 2 separate elements, a "<" text and the Script tag.
                 Assert.AreEqual(expected, actual);
             }
 
