@@ -103,6 +103,15 @@ namespace RockFluid
 
 
             /// <summary>
+            /// Gets or sets the custom list of blacklisted tags. These tags are always removed from internal list and custom whitelists.
+            /// </summary>
+            /// <remarks>
+            /// This removes tags from internal and custom whitelists, for cases when internal list is acceptable except for a few tags configured in it.
+            /// </remarks>
+            public static List<String> CustomBlacklistedTags { get; set; } = new List<String>();
+
+
+            /// <summary>
             /// Gets or sets the custom list of special supplemental tags to extend the default WhitelistedTags list. These are not added to the CustomWhitelistedTags property.
             /// </summary>
             /// <remarks>

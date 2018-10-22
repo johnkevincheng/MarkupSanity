@@ -24,16 +24,20 @@ namespace RockFluid
 
             foreach (var tag in Configure.InternalDefaultLists.InternalRequiredTags)
             { //-- Some "tags" are always required by HtmlAgilityPack, so make sure they are included.
-                if (!Configure.InternalDefaultLists.WhitelistedTags.Exists(p => p.ToLower() == tag.ToLower()))
+                if (!Configure.InternalDefaultLists.WhitelistedTags.Exists(p => String.Equals(p, tag, StringComparison.OrdinalIgnoreCase)))
                     whitelistedTags.Add(tag);
             }
+
+
+            //-- Remove black-listed tags from the whitelist.
+            whitelistedTags = whitelistedTags.Except(Configure.CustomBlacklistedTags).ToList();
 
 
             var htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(dirtyInput);
 
             //-- First remove all tags not included in the whitelist.
-            IEnumerable<HtmlNode> removalTargets = htmlDoc.DocumentNode.DescendantsAndSelf().Where(p => !whitelistedTags.Exists(q => q.ToLower() == p.Name.ToLower()));
+            IEnumerable<HtmlNode> removalTargets = htmlDoc.DocumentNode.DescendantsAndSelf().Where(p => !whitelistedTags.Exists(q => String.Equals(q, p.Name, StringComparison.OrdinalIgnoreCase)));
             if (removalTargets != null && removalTargets.Count() > 0)
             {
                 foreach (var node in removalTargets.Reverse())
@@ -43,7 +47,7 @@ namespace RockFluid
 
             //-- Remove nodes containing dangerous Type values.
             var scriptTypes = new String[] { "text/javascript", "text/vbscript" };
-            foreach (var node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(n => n.HasAttributes && n.Attributes.ToList().Exists(a => a.Name.ToLower() == "type" && scriptTypes.Contains(a.Value.ToLower()))).Reverse())
+            foreach (var node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(n => n.HasAttributes && n.Attributes.ToList().Exists(a => String.Equals(a.Name, "type", StringComparison.OrdinalIgnoreCase) && scriptTypes.Contains(a.Value.ToLower()))).Reverse())
                 node.Remove();
 
 
@@ -51,7 +55,7 @@ namespace RockFluid
             foreach (HtmlNode node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(p => p.HasAttributes))
             {
                 //-- Next remove any attributes not included in the whitelist of any tags still retained from previous step.
-                IEnumerable<HtmlAttribute> attributes = node.Attributes.Where(p => !whitelistedAttributes.Exists(q => q.ToLower() == p.Name.ToLower()));
+                IEnumerable<HtmlAttribute> attributes = node.Attributes.Where(p => !whitelistedAttributes.Exists(q => String.Equals(q, p.Name, StringComparison.OrdinalIgnoreCase)));
                 if (attributes != null && attributes.Count() > 0)
                     foreach (var attr in attributes.Reverse())
                     {
@@ -60,7 +64,7 @@ namespace RockFluid
                     }
 
                 //-- Additionally, remove any attributes that contain scripts which the browser can execute.
-                IEnumerable<HtmlAttribute> scriptAttributes = node.Attributes.Where(p => scriptableAttributes.Exists(q => q.ToLower() == p.Name.ToLower()));
+                IEnumerable<HtmlAttribute> scriptAttributes = node.Attributes.Where(p => scriptableAttributes.Exists(q => String.Equals(q, p.Name, StringComparison.OrdinalIgnoreCase)));
                 if (scriptAttributes != null && scriptAttributes.Count() > 0)
                 {
                     foreach (var attr in scriptAttributes.Reverse())
