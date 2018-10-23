@@ -52,7 +52,7 @@ namespace RockFluid
 
             //-- Remove nodes containing dangerous Type values.
             var scriptTypes = new String[] { "text/javascript", "text/vbscript" };
-            foreach (var node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(n => n.HasAttributes && n.Attributes.ToList().Exists(a => String.Equals(a.Name, "type", StringComparison.OrdinalIgnoreCase) && scriptTypes.Contains(a.Value.ToLower()))).Reverse())
+            foreach (var node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(n => n.HasAttributes && n.Attributes.ToList().Exists(a => String.Equals(a.Name, "type", StringComparison.OrdinalIgnoreCase) && scriptTypes.Contains(a.Value.Replace(" ", String.Empty).ToLower()))).Reverse())
                 node.Remove();  //-- Always remove entire node where this attribute signature is found (e.g. script blocks).
 
 
