@@ -41,14 +41,19 @@ namespace RockFluid
             if (removalTargets != null && removalTargets.Count() > 0)
             {
                 foreach (var node in removalTargets.Reverse())
+                {
+                    if (Configure.RemoveTagsOnly)
+                        node.ParentNode.InsertBefore(htmlDoc.CreateTextNode(node.InnerHtml), node);
+
                     node.Remove();
+                }
             }
 
 
             //-- Remove nodes containing dangerous Type values.
             var scriptTypes = new String[] { "text/javascript", "text/vbscript" };
             foreach (var node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(n => n.HasAttributes && n.Attributes.ToList().Exists(a => String.Equals(a.Name, "type", StringComparison.OrdinalIgnoreCase) && scriptTypes.Contains(a.Value.ToLower()))).Reverse())
-                node.Remove();
+                node.Remove();  //-- Always remove entire node where this attribute signature is found (e.g. script blocks).
 
 
             //-- Next find all nodes that has an attribute.
