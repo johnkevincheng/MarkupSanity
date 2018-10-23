@@ -265,3 +265,4 @@ __pycache__/
 /MarkupSanity/.refsignored
 /MarkupSanity/nuget.exe
 /MarkupSanity/MarkupSanity.nuspec
+/CreatePackage.bat

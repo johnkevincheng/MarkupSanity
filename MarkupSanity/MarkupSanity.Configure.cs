@@ -134,6 +134,11 @@ namespace RockFluid
             /// Add values here if the defaults are acceptable, but would like to add more to it.
             /// </remarks>
             public static List<String> SupplementalScriptableAttributes { get; set; } = new List<String>();
+
+            /// <summary>
+            /// Gets or sets whether to remove the entire node (tag and contents) or only the invalid tag (retaining content).
+            /// </summary>
+            public static Boolean RemoveTagsOnly { get; set; } = true;
         }
     }
 }
