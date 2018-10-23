@@ -42,7 +42,7 @@ namespace RockFluid
             {
                 foreach (var node in removalTargets.Reverse())
                 {
-                    if (Configure.RemoveTagsOnly)
+                    if (Configure.RemoveMarkupTagsOnly)
                         node.ParentNode.InsertBefore(htmlDoc.CreateTextNode(node.InnerHtml), node);
 
                     node.Remove();
