@@ -139,6 +139,11 @@ namespace RockFluid
             /// Gets or sets whether to remove the entire node (tag and contents) or only the invalid tag (retaining content).
             /// </summary>
             public static Boolean RemoveMarkupTagsOnly { get; set; } = false;
+
+            /// <summary>
+            /// Gets or sets whether comments should be removed during cleanup.
+            /// </summary>
+            public static Boolean RemoveComments { get; set; } = true;
         }
     }
 }

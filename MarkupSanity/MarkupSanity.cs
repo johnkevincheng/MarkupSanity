@@ -42,10 +42,17 @@ namespace RockFluid
             {
                 foreach (var node in removalTargets.Reverse())
                 {
-                    if (Configure.RemoveMarkupTagsOnly)
-                        node.ParentNode.InsertBefore(htmlDoc.CreateTextNode(node.InnerHtml), node);
+                    if (node.NodeType == HtmlNodeType.Comment && Configure.RemoveComments)
+                    {   //-- Check if comments should be removed.
+                        node.Remove();
+                    }
+                    else if (node.NodeType == HtmlNodeType.Element)
+                    {   //-- Check if only markup tags are removed or also the contents.
+                        if (Configure.RemoveMarkupTagsOnly) //-- Insert contents as a sibling mode before removing the node with invalid tag.
+                            node.ParentNode.InsertBefore(htmlDoc.CreateTextNode(node.InnerHtml), node);
 
-                    node.Remove();
+                        node.Remove();
+                    }
                 }
             }
 

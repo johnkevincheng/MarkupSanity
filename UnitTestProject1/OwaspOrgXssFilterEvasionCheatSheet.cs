@@ -307,17 +307,6 @@ namespace UnitTestProject1
         }
 
         /// <summary>
-        /// Only works in IE5.0 and later and Netscape 8.1 in IE rendering engine mode). Some websites consider anything inside a comment block to be safe and therefore does not need to be removed, which allows our Cross Site Scripting vector. Or the system could add comment tags around something to attempt to render it harmless. As we can see, that probably wouldn't do the job:
-        /// </summary>
-        [TestMethod]
-        public void DownlevelHiddenBlock()
-        {
-            var actual = $"<!--[if gte IE 4]>{Environment.NewLine} <SCRIPT>alert('XSS');</SCRIPT>{Environment.NewLine} <![endif]-->".SanitizeHtml();
-            var expected = "xxx";
-            Assert.AreEqual(expected, actual);
-        }
-
-        /// <summary>
         /// Click here for a demo. If you add the attributes allowScriptAccess="never" and allownetworking="internal" it can mitigate this risk (thank you to Jonathan Vanasco for the info).:
         /// </summary>
         [TestMethod]
@@ -866,6 +855,20 @@ namespace UnitTestProject1
             {
                 var actual = "<EMBED SRC=\"data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==\" type=\"image/svg+xml\" AllowScriptAccess=\"always\"></EMBED>".SanitizeHtml();
                 var expected = "";   //-- Embed tag can contain dangerous objects and thus not in the whitelist.
+                Assert.AreEqual(expected, actual);
+            }
+
+            /// <summary>
+            /// Only works in IE5.0 and later and Netscape 8.1 in IE rendering engine mode). Some websites consider anything inside a comment block to be safe and therefore does not need to be removed, which allows our Cross Site Scripting vector. Or the system could add comment tags around something to attempt to render it harmless. As we can see, that probably wouldn't do the job:
+            /// </summary>
+            [TestMethod]
+            public void DownlevelHiddenBlock()
+            {
+                var origConfig = MarkupSanity.Configure.RemoveComments;
+                MarkupSanity.Configure.RemoveComments = true;
+                var actual = $"<!--[if gte IE 4]>{Environment.NewLine} <SCRIPT>alert('XSS');</SCRIPT>{Environment.NewLine} <![endif]-->".SanitizeHtml();
+                var expected = "";
+                MarkupSanity.Configure.RemoveComments = origConfig;
                 Assert.AreEqual(expected, actual);
             }
         }
