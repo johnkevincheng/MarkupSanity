@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-
 
 namespace RockFluid
 {
@@ -22,12 +20,11 @@ namespace RockFluid
             if (whitelistedTags == null || whitelistedTags.Count == 0)
                 return dirtyInput;
 
-            foreach (var tag in Configure.InternalDefaultLists.InternalRequiredTags)
-            { //-- Some "tags" are always required by HtmlAgilityPack, so make sure they are included.
-                if (!Configure.InternalDefaultLists.WhitelistedTags.Exists(p => String.Equals(p, tag, StringComparison.OrdinalIgnoreCase)))
-                    whitelistedTags.Add(tag);
-            }
-
+            //-- Some "tags" are always required by HtmlAgilityPack, so make sure they are included.
+            Configure.InternalDefaultLists.InternalRequiredTags
+                .Where(internalTag => !Configure.InternalDefaultLists.WhitelistedTags.Exists(whitelistedTag => whitelistedTag.Equals(internalTag, StringComparison.OrdinalIgnoreCase)))
+                .ToList()
+                .ForEach(internalTag => whitelistedTags.Add(internalTag));
 
             //-- Remove black-listed tags from the whitelist.
             whitelistedTags = whitelistedTags.Except(Configure.CustomBlacklistedTags).ToList();
@@ -35,64 +32,14 @@ namespace RockFluid
 
             var htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(dirtyInput);
+            IEnumerable<HtmlNode> docNodes = htmlDoc.DocumentNode.DescendantsAndSelf();
 
-            //-- First remove all tags not included in the whitelist.
-            IEnumerable<HtmlNode> removalTargets = htmlDoc.DocumentNode.DescendantsAndSelf().Where(p => !whitelistedTags.Exists(q => String.Equals(q, p.Name, StringComparison.OrdinalIgnoreCase)));
-            if (removalTargets != null && removalTargets.Count() > 0)
-            {
-                foreach (var node in removalTargets.Reverse())
-                {
-                    if (node.NodeType == HtmlNodeType.Comment && Configure.RemoveComments)
-                    {   //-- Check if comments should be removed.
-                        node.Remove();
-                    }
-                    else if (node.NodeType == HtmlNodeType.Element)
-                    {   //-- Check if only markup tags are removed or also the contents.
-                        if (Configure.RemoveMarkupTagsOnly) //-- Insert contents as a sibling mode before removing the node with invalid tag.
-                            node.ParentNode.InsertBefore(htmlDoc.CreateTextNode(node.InnerHtml), node);
-
-                        node.Remove();
-                    }
-                }
-            }
-
-
-            //-- Remove nodes containing dangerous Type values.
-            var scriptTypes = new String[] { "text/javascript", "text/vbscript" };
-            foreach (var node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(n => n.HasAttributes && n.Attributes.ToList().Exists(a => String.Equals(a.Name, "type", StringComparison.OrdinalIgnoreCase) && scriptTypes.Contains(a.Value.Replace(" ", String.Empty).ToLower()))).Reverse())
-                node.Remove();  //-- Always remove entire node where this attribute signature is found (e.g. script blocks).
-
-
-            //-- Next find all nodes that has an attribute.
-            foreach (HtmlNode node in htmlDoc.DocumentNode.DescendantsAndSelf().Where(p => p.HasAttributes))
-            {
-                //-- Next remove any attributes not included in the whitelist of any tags still retained from previous step.
-                IEnumerable<HtmlAttribute> attributes = node.Attributes.Where(p => !whitelistedAttributes.Exists(q => String.Equals(q, p.Name, StringComparison.OrdinalIgnoreCase)));
-                if (attributes != null && attributes.Count() > 0)
-                    foreach (var attr in attributes.Reverse())
-                    {
-                        attr.Remove();
-                        continue;
-                    }
-
-                //-- Additionally, remove any attributes that contain scripts which the browser can execute.
-                IEnumerable<HtmlAttribute> scriptAttributes = node.Attributes.Where(p => scriptableAttributes.Exists(q => String.Equals(q, p.Name, StringComparison.OrdinalIgnoreCase)));
-                if (scriptAttributes != null && scriptAttributes.Count() > 0)
-                {
-                    foreach (var attr in scriptAttributes.Reverse())
-                    {
-                        //-- Check each scriptable attribute for known signatures.
-                        foreach (var signature in Configure.InternalDefaultLists.ScriptableAttributesScriptSignatures)
-                        {
-                            if (attr.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode).StartsWith(signature))
-                            {
-                                attr.Remove();
-                                continue;
-                            }
-                        }
-                    }
-                }
-            }
+            //-- Perform cleanup steps.
+            docNodes.FilterWhiteListedTags(Configure.RemoveMarkupTagsOnly, whitelistedTags, htmlDoc)
+                .CleanComments(Configure.RemoveComments)
+                .RemoveDangerousTypeNodes()
+                .FilterWhitelistedAttributes(whitelistedAttributes)
+                .CleanScriptableAttributes(scriptableAttributes);
 
             return htmlDoc.DocumentNode.OuterHtml;
         }
