@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RockFluid;
+using System;
+using System.Collections.Generic;
 
 namespace UnitTestProject1
 {
@@ -43,6 +45,40 @@ namespace UnitTestProject1
         {
             var actual = "<codeblock>String s = 'sample text';</codeblock>".SanitizeHtml();
             var expected = "";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestCustomConfigurationsParamater()
+        {
+            var actual = "<codeblock>String s = 'use global here';</codeblock>".SanitizeHtml();
+            var expected = "";
+            Assert.AreEqual(expected, actual);
+
+            var configs = new MarkupSanity.SanitizeConfigurations();
+            configs.CustomWhitelistedTags = new List<String>() { "codeblock" };
+
+            actual = "<codeblock>String s = 'use custom configs here';</codeblock>".SanitizeHtml(configs);
+            expected = "<codeblock>String s = 'use custom configs here';</codeblock>";
+            Assert.AreEqual(expected, actual);
+
+            actual = "<codeblock>String s = 'use global again here';</codeblock>".SanitizeHtml();
+            expected = "";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestBlacklistedTags()
+        {
+            var config = new MarkupSanity.SanitizeConfigurations();
+            var actual = "<b>sample text</b>".SanitizeHtml(config);
+            var expected = "<b>sample text</b>";
+            Assert.AreEqual(expected, actual);
+
+            config.CustomBlacklistedTags = new List<String>() { "b" };
+
+            actual = "<b>sample text</b>".SanitizeHtml(config);
+            expected = "";
             Assert.AreEqual(expected, actual);
         }
     }

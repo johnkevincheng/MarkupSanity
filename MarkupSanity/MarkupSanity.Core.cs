@@ -56,10 +56,9 @@ namespace RockFluid
         /// </summary>
         /// <param name="rootNode">The root node of the html document parsed by HTML Agility Pack.</param>
         /// <returns></returns>
-        internal static IEnumerable<HtmlNode> RemoveDangerousTypeNodes(this IEnumerable<HtmlNode> rootNode)
+        internal static IEnumerable<HtmlNode> RemoveDangerousTypeNodes(this IEnumerable<HtmlNode> rootNode, List<String> scriptTypes)
         {
-            var scriptTypes = new String[] { "text/javascript", "text/vbscript" };
-            rootNode.Where(node => node.HasAttributes && node.Attributes.ToList().Exists(attr => attr.Name.Equals("type", StringComparison.OrdinalIgnoreCase) && scriptTypes.Contains(attr.Value.Replace(" ", string.Empty).ToLower())))
+            rootNode.Where(node => node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes.ToList().Exists(attr => attr.Name.Equals("type", StringComparison.OrdinalIgnoreCase) && scriptTypes.Contains(attr.Value.Collapse().ToLower())))
                     .ToList()
                     .ForEach(node => node.Remove());  //-- Always remove entire node where this attribute signature is found (e.g. script blocks).
 
@@ -74,7 +73,7 @@ namespace RockFluid
         /// <returns></returns>
         internal static IEnumerable<HtmlNode> FilterWhitelistedAttributes(this IEnumerable<HtmlNode> rootNode, List<String> whitelistedAttributes)
         {
-            rootNode.Where(node => node.HasAttributes)
+            rootNode.Where(node => node.NodeType == HtmlNodeType.Element && node.HasAttributes)
                     .ToList()
                     .ForEach(node => node.Attributes
                                     .Where(attr => !whitelistedAttributes.Exists(allowedAttr => allowedAttr.Equals(attr.Name, StringComparison.OrdinalIgnoreCase)))
@@ -95,11 +94,11 @@ namespace RockFluid
             Boolean AttributeContainsScriptableSignature(HtmlAttribute attribute)
             {
                 var input = attribute.Value.ProcessString(HttpUtility.UrlDecode, HttpUtility.HtmlDecode);
-                return Configure.InternalDefaultLists.ScriptableAttributesScriptSignatures.Exists(signature => input.Replace(" ", String.Empty).StartsWith(signature));
+                return Configure.InternalDefaultLists.ScriptableAttributesScriptSignatures.Exists(signature => input.Collapse().StartsWith(signature));
             }
 
             //-- Additionally, remove any attributes that contain scripts which the browser can execute.
-            rootNode.Where(node => node.HasAttributes)
+            rootNode.Where(node => node.NodeType == HtmlNodeType.Element && node.HasAttributes)
                     .ToList()
                     .ForEach(node => node.Attributes
                                     .Where(attr => scriptableAttributes.Exists(targetAttr => targetAttr.Equals(attr.Name, StringComparison.OrdinalIgnoreCase)) && AttributeContainsScriptableSignature(attr))
