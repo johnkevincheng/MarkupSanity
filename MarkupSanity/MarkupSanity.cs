@@ -11,7 +11,7 @@ namespace RockFluid
         /// Protect against cross-site scripting vulnerabilities by sanitizing the html input against unrecognized tags and attributes.
         /// </summary>
         /// <param name="dirtyInput">The raw html input.</param>
-        /// <param name="configurations"></param>
+        /// <param name="configurations">Custom MarkupSanity configurations to use for this method call.</param>
         /// <returns></returns>
         public static String SanitizeHtml(this String dirtyInput, SanitizeConfigurations configurations)
         {
@@ -95,6 +95,37 @@ namespace RockFluid
         public static String SanitizeHtml(this String dirtyInput)
         {
             return dirtyInput.SanitizeHtml(Configure.CustomWhitelistedTags, Configure.CustomWhitelistedAttributes, Configure.CustomScriptableAttributes);
+        }
+
+        /// <summary>
+        /// Sanitizes the text based on global MarkupSanity configurations. A return value indicates whether the input text was dirty and subsequently cleaned.
+        /// </summary>
+        /// <param name="dirtyInput">The raw html input.</param>
+        /// <param name="sanitizedText">The sanitized results after processing the dirty input. Returns the same text if no dirty elements were found.</param>
+        /// <returns></returns>
+        public static Boolean TrySanitizeHtml(this String dirtyInput, out String sanitizedText)
+        {
+            String outputValue = SanitizeHtml(dirtyInput);
+
+            sanitizedText = outputValue;
+
+            return !dirtyInput.Equals(outputValue, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Sanitizes the text based on provided MarkupSanity configurations. A return value indicates whether the input text was dirty and subsequently cleaned.
+        /// </summary>
+        /// <param name="dirtyInput">The raw html input.</param>
+        /// <param name="configurations">Custom MarkupSanity configurations to use for this method call.</param>
+        /// <param name="sanitizedText">The sanitized results after processing the dirty input. Returns the same text if no dirty elements were found.</param>
+        /// <returns></returns>
+        public static Boolean TrySanitizeHtml(this String dirtyInput, SanitizeConfigurations configurations, out String sanitizedText)
+        {
+            String outputValue = SanitizeHtml(dirtyInput, configurations);
+
+            sanitizedText = outputValue;
+
+            return !dirtyInput.Equals(outputValue, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

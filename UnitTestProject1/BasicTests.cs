@@ -81,5 +81,25 @@ namespace UnitTestProject1
             expected = "";
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TrySanitizeFunction()
+        {
+            var config = new MarkupSanity.SanitizeConfigurations();
+            var actual = "<b>sample text</b>";
+            String outVal;
+
+            Boolean wasCleaned = actual.TrySanitizeHtml(config, out outVal);
+
+            Assert.AreEqual("<b>sample text</b>", outVal);
+            Assert.AreEqual(false, wasCleaned);
+
+
+            config.CustomBlacklistedTags = new List<String>() { "b" };
+            wasCleaned = actual.TrySanitizeHtml(config, out outVal);
+
+            Assert.AreEqual("", outVal);
+            Assert.AreEqual(true, wasCleaned);
+        }
     }
 }
