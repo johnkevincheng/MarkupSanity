@@ -92,14 +92,14 @@ namespace UnitTestProject1
             Boolean wasCleaned = actual.TrySanitizeHtml(config, out outVal);
 
             Assert.AreEqual("<b>sample text</b>", outVal);
-            Assert.AreEqual(false, wasCleaned);
+            Assert.AreEqual(true, wasCleaned);
 
 
             config.CustomBlacklistedTags = new List<String>() { "b" };
             wasCleaned = actual.TrySanitizeHtml(config, out outVal);
 
             Assert.AreEqual("", outVal);
-            Assert.AreEqual(true, wasCleaned);
+            Assert.AreEqual(false, wasCleaned);
         }
     }
 }
