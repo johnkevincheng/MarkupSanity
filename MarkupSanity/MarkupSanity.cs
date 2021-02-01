@@ -50,7 +50,8 @@ namespace RockFluid
                 .CleanComments(configurations.RemoveComments)
                 .RemoveDangerousTypeNodes(configurations.InternalDefaultLists.ScriptTypeSignatures)
                 .FilterWhitelistedAttributes(whitelistedAttributes)
-                .CleanScriptableAttributes(scriptableAttributes);
+                .CleanScriptableAttributes(scriptableAttributes)
+                .CleanScriptableStyleAttributes(configurations.InternalDefaultLists.ScriptableAttributesScriptSignatures);
 
             return htmlDoc.DocumentNode.OuterHtml;
         }

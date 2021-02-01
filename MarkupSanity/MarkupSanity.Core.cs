@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace RockFluid
@@ -104,6 +105,48 @@ namespace RockFluid
                                     .Where(attr => scriptableAttributes.Exists(targetAttr => targetAttr.Equals(attr.Name, StringComparison.OrdinalIgnoreCase)) && AttributeContainsScriptableSignature(attr))
                                     .ToList()
                                     .ForEach(attr => attr.Remove()));
+
+            return rootNode;
+        }
+
+        /// <summary>
+        /// Process the style attribute (which allows scripts in addition to their core purpose) and remove any style element found to have script patterns.
+        /// </summary>
+        /// <param name="rootNode">The root node of the html document parsed by HTML Agility Pack.</param>
+        /// <param name="scriptableAttributes">The list of known attributes known to be scriptable which requires additional processing on their values.</param>
+        /// <returns></returns>
+        internal static IEnumerable<HtmlNode> CleanScriptableStyleAttributes(this IEnumerable<HtmlNode> rootNode, List<String> scriptableAttributes)
+        {
+            //-- Find all nodes containing style attribute.
+            var allNodesWithStyleAttr = rootNode.Where(node => node.NodeType == HtmlNodeType.Element && node.HasAttributes && node.Attributes.ToList().Exists(attr => attr.Name.Equals("style", StringComparison.OrdinalIgnoreCase))).ToList();
+            foreach (var node in allNodesWithStyleAttr)
+            {
+                //-- Process each style attribute.
+                foreach (var currentStyleAttr in node.Attributes.Where(attr => attr.Name.Equals("style", StringComparison.OrdinalIgnoreCase)))
+                {
+                    //-- Separate the style properties (after Html Decoding).
+                    var styleDefinitions = HttpUtility.HtmlDecode(currentStyleAttr.Value).Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                    var processedStyleValue = new StringBuilder();
+
+                    foreach (var styleDef in styleDefinitions)
+                    {
+                        var splitterPosition = styleDef.IndexOf(":");
+                        if (splitterPosition > 0)
+                        {
+                            var rightValue = styleDef.Substring(splitterPosition + 1).Trim().ToLower();
+                            if (!scriptableAttributes.Any(p => rightValue.Contains(p))) //-- If style property value does not have scriptable signature, keep the current style element.
+                                processedStyleValue.Append(styleDef);
+                        }
+                        else
+                        {
+                            //-- If for some reason not a property/value pair, just keep as-is.
+                            processedStyleValue.Append(styleDef);
+                        }
+                    }
+
+                    currentStyleAttr.Value = processedStyleValue.ToString();
+                }
+            }
 
             return rootNode;
         }
