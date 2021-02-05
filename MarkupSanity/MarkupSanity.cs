@@ -16,15 +16,15 @@ namespace RockFluid
         public static String SanitizeHtml(this String dirtyInput, SanitizeConfigurations configurations)
         {
             var whitelistedTags = configurations.CustomWhitelistedTags;
-            if (whitelistedTags == null || whitelistedTags.Count == 0)
+            if (whitelistedTags == null)
                 whitelistedTags = configurations.InternalDefaultLists.WhitelistedTags;
 
             var whitelistedAttributes = configurations.CustomWhitelistedAttributes;
-            if (whitelistedAttributes == null || whitelistedAttributes.Count == 0)
+            if (whitelistedAttributes == null)
                 whitelistedAttributes = configurations.InternalDefaultLists.WhitelistedAttributes;
 
             var scriptableAttributes = configurations.CustomScriptableAttributes;
-            if (scriptableAttributes == null || scriptableAttributes.Count == 0)
+            if (scriptableAttributes == null)
                 scriptableAttributes = configurations.InternalDefaultLists.ScriptableAttributes;
 
 
@@ -38,7 +38,7 @@ namespace RockFluid
                 .ForEach(internalTag => whitelistedTags.Add(internalTag));
 
             //-- Remove black-listed tags from the whitelist.
-            whitelistedTags = whitelistedTags.Except(configurations.CustomBlacklistedTags).ToList();
+            whitelistedTags = whitelistedTags.Except(configurations.CustomBlacklistedTags ?? new List<string>()).ToList();
 
 
             var htmlDoc = new HtmlAgilityPack.HtmlDocument();

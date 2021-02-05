@@ -101,5 +101,34 @@ namespace UnitTestProject1
             Assert.AreEqual("", outVal);
             Assert.AreEqual(false, wasCleaned);
         }
+
+        [TestMethod]
+        public void RemoveAllAttributes()
+        {
+            var actual = "<a href='#'>Submit</a>".SanitizeHtml(new List<string>() {"a"}, new List<string>());
+            var expected = "<a>Submit</a>";
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        [TestMethod]
+        public void RemoveAllAttributesAndScripts()
+        {
+            var actual = @"
+                <script type='text/javascript'>document.test();</script>
+                <img src='https://google.com'/>
+                <p class='teste'>This is a valid HTML text.</p>
+                <ul>
+                   <li checked style='teste: 10px'>Item 1</li>
+                   <li>Item 2</li>
+                </ul>
+            ".SanitizeHtml(new List<string>() { "p", "ul", "li" }, new List<string>(), new List<string>()).Trim();
+            var expected = @"<p>This is a valid HTML text.</p>
+                <ul>
+                   <li>Item 1</li>
+                   <li>Item 2</li>
+                </ul>";
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
